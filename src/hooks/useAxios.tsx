@@ -8,7 +8,7 @@ const useAxios = () => {
   const userStore = useUserStore()
 
   const api = axios.create({
-    baseURL: `http://localhost:8080/api`,
+    baseURL: `http://localhost:8080/api/v1`,
     timeout: 3000
   }); 
 
@@ -25,7 +25,7 @@ const useAxios = () => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
-      if (error.response?.status === 401) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
         navigate('/auth');
       }
       return Promise.reject(error);

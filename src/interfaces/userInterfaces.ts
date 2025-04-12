@@ -6,9 +6,14 @@ interface IRegisterDto{
     email: string
 }
 
+interface IAuthDto{
+    username: string
+    password: string
+}
+
 interface AuthResponse {
     token: string
 }
 
 
-export type {IRegisterDto, AuthResponse}
+export type {IRegisterDto,IAuthDto, AuthResponse}

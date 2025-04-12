@@ -5,8 +5,52 @@ import useUserStore from "../../state/userStore";
 import { useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
 import Header from "../default/Header";
+import Label from "../default/Label";
+import FormInput from "../default/FormInput";
 
+import logo from "../../img/Illustration.svg"
+import Button from "../default/Button";
 
+const containerStyles: React.CSSProperties = {
+    display: "flex",
+    height: "100vh",
+    justifyContent: "start",
+    alignItems: "center",
+    flexDirection: "column",
+    width: "100vw" 
+}
+
+const innerContainerStyles: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "auto",
+    borderWidth: '3px',
+    padding: "2.5vw 5vw",
+    borderStyle: 'solid',
+    borderColor: '#DFDFDF', // slate-200
+    borderRadius: '0.375rem',
+    marginTop: "5vw"
+}
+
+const formStyles: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "start",
+    alignContent: "center",
+    flexDirection: "column",
+    width: "20vw"
+}
+
+const h3Styles: React.CSSProperties = {
+    fontFamily: '"InstrumentSans", sans-serif',
+    fontSize: "2vw",
+    color: "#555555"
+}
+
+const logoStyles: React.CSSProperties = {
+    marginLeft: "5vw",
+    display: "block"
+}
 
 function Register() {
     const [registerState, setRegisterState] = useState<IRegisterDto>({username: "", password: "", email: ""})
@@ -26,18 +70,24 @@ function Register() {
         }
     }
     return (
-        <div className="registerPage">
+        <div style={containerStyles}>
             <Header></Header>
-            <form>
-                <h3>Create account</h3>
-                <label>Username</label>
-                <input onChange={(e)=>setRegisterState({...registerState, username: e.target.value})} value={registerState.username}></input>
-                <label>Password</label>
-                <input onChange={(e)=>setRegisterState({...registerState, password: e.target.value})} value={registerState.password}></input>
-                <label>Email</label>
-                <input onChange={(e)=>setRegisterState({...registerState, email: e.target.value})} value={registerState.email}></input>
-            </form>
-            <button onClick={()=>register()}>Register</button>
+            <div style={innerContainerStyles}>
+                <form style={formStyles} className="registerForm">
+                    <h3 style={h3Styles}>Create account</h3>
+                    <Label name="Username"></Label>
+                    <FormInput value={registerState.username} placeHolder="Enter your username" onChange={(e)=>setRegisterState({...registerState, username: e.target.value})}></FormInput>
+                    <Label name="Password"></Label>
+                    <FormInput value={registerState.password} placeHolder="Enter your password" onChange={(e)=>setRegisterState({...registerState, password: e.target.value})}></FormInput>
+                    <Label name="Email"></Label>
+                    <FormInput value={registerState.email} placeHolder="Enter your email" onChange={(e)=>setRegisterState({...registerState, email: e.target.value})}></FormInput>
+                    <Button name="Register" onClick={(e)=>{
+                        e.preventDefault()
+                        register()
+                    }} isPrimary={true}></Button>
+                </form>
+                <img style={logoStyles}src={logo}></img>
+            </div>
         </div>
     );
 }
