@@ -30,6 +30,9 @@ export default function ProjectForm(projectFormProps: ProjectFormProps) {
 
         <Button
           name="Submit"
+          style={{
+            marginTop: "1vw",
+          }}
           onClick={async (e) => {
             e.preventDefault();
             projectFormProps.perform({
@@ -40,6 +43,9 @@ export default function ProjectForm(projectFormProps: ProjectFormProps) {
           isPrimary={true}
         ></Button>
         <Button
+          style={{
+            marginTop: "1vw",
+          }}
           name="Close"
           isPrimary={false}
           onClick={(e) => {
@@ -54,11 +60,13 @@ export default function ProjectForm(projectFormProps: ProjectFormProps) {
 
 const formStyles: React.CSSProperties = {
   position: "absolute",
-  top: "25%",
-  left: "25%",
-  width: "50%",
-  height: "50%",
-  backgroundColor: "gray",
+  top: "25vh",
+  left: "25vw",
+  width: "50vw",
+  height: "50vh",
+  borderRadius: "10px",
+  backgroundColor: "#F3F3FF",
+  padding: "2vw",
   display: "flex",
   flexDirection: "column",
 };

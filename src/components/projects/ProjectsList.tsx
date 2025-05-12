@@ -6,6 +6,12 @@ import useAxios from "../../hooks/useAxios";
 import { AxiosResponse } from "axios";
 import ProjectForm from "./ProjectForm";
 import Header from "../default/Header";
+import {
+  CENTRALIZED_COLUMN,
+  CENTRALIZED_ROW,
+} from "../../styles/defaultStyles";
+
+import logo from "../../img/illustration2.jpg";
 
 interface ChoosenProject {
   name: string;
@@ -85,6 +91,7 @@ export default function ProjectList() {
   return (
     <>
       <Header></Header>
+
       {projectForm ? (
         <ProjectForm
           name={projectForm.name}
@@ -95,22 +102,33 @@ export default function ProjectList() {
       ) : (
         <></>
       )}
-      <Button
-        name="Create"
-        onClick={() => {
-          chooseProject({ name: "" }, createProject);
-        }}
-        isPrimary={false}
-      ></Button>
-      <div style={projectsListStyle}>
-        {projects.map((project) => (
-          <Project
-            key={project.projectId}
-            project={project}
-            deleteCallback={deleteProject}
-            patchCallback={async () => chooseProject(project, patchProject)}
-          />
-        ))}
+      <div style={CENTRALIZED_COLUMN}>
+        <div style={{ ...CENTRALIZED_ROW, margin: "2vw" }}>
+          <h1 style={{ color: "#555555", fontSize: "2vw" }}>
+            Create and explore your projects
+          </h1>
+          <Button
+            style={{ marginLeft: "1vw" }}
+            name="Create"
+            onClick={() => {
+              chooseProject({ name: "" }, createProject);
+            }}
+            isPrimary={true}
+          ></Button>
+        </div>
+        <div style={CENTRALIZED_ROW}>
+          <img src={logo} style={{ width: "40vw" }}></img>
+          <div style={projectsListStyle}>
+            {projects.map((project) => (
+              <Project
+                key={project.projectId}
+                project={project}
+                deleteCallback={deleteProject}
+                patchCallback={async () => chooseProject(project, patchProject)}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );
@@ -121,4 +139,8 @@ const projectsListStyle: React.CSSProperties = {
   flexDirection: "column",
   justifyContent: "start",
   alignItems: "center",
+  height: "60vh",
+  width: "40vw",
+  overflowY: "scroll",
+  marginLeft: "3vw",
 };

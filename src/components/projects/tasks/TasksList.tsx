@@ -12,6 +12,12 @@ import {
   parseDate,
   calculateTimePercentage,
 } from "../../../util/DateUtil";
+import {
+  CENTRALIZED_COLUMN,
+  CENTRALIZED_ROW,
+} from "../../../styles/defaultStyles";
+import logo from "../../../img/illustration3.jpg";
+
 interface ChoosenTask extends TaskDto {
   perform: (task: TaskDto) => void;
 }
@@ -144,30 +150,41 @@ export default function TasksList() {
       ) : (
         <></>
       )}
-      <Button
-        name="Create"
-        onClick={() => {
-          chooseTask({ projectId } as TaskDto, createTask);
-        }}
-        isPrimary={false}
-      ></Button>
-      <div style={projectsListStyle}>
-        {tasks.map((task) => (
-          <Task
-            key={task.taskId}
-            task={task}
-            patchCallback={async () => chooseTask(task, patchTask)}
-            deleteCallback={deleteTask}
+      <div style={CENTRALIZED_COLUMN}>
+        <div style={{ ...CENTRALIZED_ROW, margin: "2vw" }}>
+          <h1 style={{ color: "#555555", fontSize: "2vw" }}>
+            Create and explore your tasks
+          </h1>
+          <Button
+            style={{ marginLeft: "1vw" }}
+            name="Create"
+            onClick={() => {
+              chooseTask({ projectId } as TaskDto, createTask);
+            }}
+            isPrimary={true}
           />
-        ))}
+        </div>
+        <div style={CENTRALIZED_ROW}>
+          <img src={logo} style={{ width: "40vw" }}></img>
+          <div style={{ ...CENTRALIZED_COLUMN, ...tasksListStyle }}>
+            {tasks.map((task) => (
+              <Task
+                key={task.taskId}
+                task={task}
+                patchCallback={async () => chooseTask(task, patchTask)}
+                deleteCallback={deleteTask}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );
 }
-
-const projectsListStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "start",
-  alignItems: "center",
+const tasksListStyle: React.CSSProperties = {
+  flex: "1",
+  height: "80vh",
+  width: "50vw",
+  overflowY: "scroll",
+  marginLeft: "3vw",
 };

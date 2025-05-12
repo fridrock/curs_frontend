@@ -1,5 +1,3 @@
-import { isBreakOrContinueStatement } from "typescript";
-
 interface ButtonProps {
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   name: string;

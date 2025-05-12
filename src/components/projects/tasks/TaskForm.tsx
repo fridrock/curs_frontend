@@ -11,7 +11,11 @@ interface TaskFormProps extends TaskDto {
 }
 
 export default function TaskForm(taskFormProps: TaskFormProps) {
-  let [task, setTask] = useState<TaskDto>(taskFormProps);
+  let [task, setTask] = useState<TaskDto>({
+    ...taskFormProps,
+    hoursSpent: taskFormProps.hoursSpent ? taskFormProps.hoursSpent : 0,
+  });
+
   return (
     <>
       <form style={formStyles}>
@@ -34,6 +38,7 @@ export default function TaskForm(taskFormProps: TaskFormProps) {
         />
         <Label name="Task priority"></Label>
         <FormSelect
+          style={{ marginTop: "1vw" }}
           onChangeHandler={(e) => {
             setTask({ ...task, priority: e.target.value });
           }}
@@ -58,6 +63,7 @@ export default function TaskForm(taskFormProps: TaskFormProps) {
         ></FormInput>
 
         <Button
+          style={{ marginBottom: "1vw", marginTop: "1vw" }}
           name="Submit"
           onClick={async (e) => {
             e.preventDefault();
@@ -82,11 +88,13 @@ export default function TaskForm(taskFormProps: TaskFormProps) {
 
 const formStyles: React.CSSProperties = {
   position: "absolute",
-  top: "25%",
-  left: "25%",
-  width: "50%",
-  height: "50%",
-  backgroundColor: "gray",
+  top: "10vh",
+  left: "25vw",
+  width: "50vw",
+  padding: "2vw",
+  height: "80vh",
   display: "flex",
   flexDirection: "column",
+  borderRadius: "10px",
+  backgroundColor: "#F3F3FF",
 };

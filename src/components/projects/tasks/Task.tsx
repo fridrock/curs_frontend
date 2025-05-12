@@ -2,6 +2,8 @@ import useAxios from "../../../hooks/useAxios";
 import { TaskDto } from "../../../interfaces/taskInterfaces";
 import Button from "../../default/Button";
 import { calculateTimePercentage } from "../../../util/DateUtil";
+import IconButton from "../../default/IconButton";
+import editLogo from "../../../img/edit.svg";
 
 interface TaskProps {
   task: TaskDto;
@@ -20,7 +22,7 @@ function getPercentageColor(percentage: number): string {
     g = Math.floor(255 * ((100 - pct) / 50));
   }
 
-  return `8px solid rgba(${r}, ${g}, 0, 0.5)`;
+  return `rgba(${r}, ${g}, 0, 0.3)`;
 }
 export default function Task({
   task,
@@ -33,7 +35,7 @@ export default function Task({
     <div
       style={{
         ...taskContainerStyle,
-        border: getPercentageColor(
+        backgroundColor: getPercentageColor(
           calculateTimePercentage(task.issued, task.deadline)
         ),
       }}
@@ -59,24 +61,27 @@ export default function Task({
         >
           {task.priority}
         </p>
+        <IconButton
+          logo={editLogo}
+          style={{ marginLeft: "auto" }}
+          onClick={(e) => patchCallback()}
+        />
         <Button
           style={{
-            marginLeft: "auto",
+            marginLeft: "0.5vw",
           }}
           isPrimary={true}
           name="Done"
           onClick={(e) => deleteCallback(task.taskId)}
         />
-        <Button
-          style={{ marginLeft: "0.5vw" }}
-          isPrimary={false}
-          name="Edit"
-          onClick={(e) => patchCallback()}
-        />
       </div>
       <p style={{ ...defaultText, marginBottom: "1vw" }}>
         <span style={highlightedText}>Description: </span>
         {task.description}
+      </p>
+      <p style={{ ...defaultText, marginBottom: "1vw" }}>
+        <span style={highlightedText}>Hours spent: </span>
+        {task.hoursSpent}
       </p>
       <p style={{ ...defaultText, marginBottom: "1vw" }}>
         <span style={highlightedText}>Issued at: </span>
@@ -93,7 +98,8 @@ export default function Task({
 const taskContainerStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  width: "65vw",
+  minHeight: "fit-content",
+  width: "100%",
   padding: "1vw",
   borderRadius: "10px",
   marginBottom: "1vw",
@@ -108,12 +114,12 @@ const taskHeaderStyle: React.CSSProperties = {
 const highlightedText: React.CSSProperties = {
   color: "#555555",
   textTransform: "uppercase",
-  fontSize: "1.2vw",
+  fontSize: "1.3vw",
   fontWeight: 600,
 };
 
 const defaultText: React.CSSProperties = {
-  fontSize: "1.5vw",
+  fontSize: "1.2vw",
   width: "100%",
   wordBreak: "break-all",
   fontWeight: 500,

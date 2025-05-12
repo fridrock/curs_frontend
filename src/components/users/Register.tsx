@@ -38,7 +38,8 @@ const formStyles: React.CSSProperties = {
   justifyContent: "start",
   alignContent: "center",
   flexDirection: "column",
-  width: "20vw",
+  width: "25vw",
+  padding: "2.5vw",
 };
 
 const h3Styles: React.CSSProperties = {
