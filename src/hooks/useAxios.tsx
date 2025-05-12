@@ -9,7 +9,7 @@ const useAxios = () => {
 
   const api = axios.create({
     baseURL: `http://localhost:8080/api/v1`,
-    timeout: 3000
+    timeout: 180000
   }); 
 
   api.interceptors.request.use(

@@ -6,6 +6,7 @@ export default function Header(){
             <NavLink to="/auth">Auth</NavLink>
             <NavLink to="/register">Register</NavLink>
             <NavLink to="/home">Home</NavLink>
+            <NavLink to="/projects">Projects</NavLink>
         </header>
     )
 }

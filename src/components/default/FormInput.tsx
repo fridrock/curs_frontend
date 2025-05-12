@@ -6,27 +6,7 @@ interface InputProps{
     placeHolder: string;
 }
 
-const inputStyles: React.CSSProperties = {
-    appearance: 'none',
-    WebkitAppearance: 'none',
-    MozAppearance: 'none',
-    outline: 'none',
-    backgroundImage: 'none',
-    backgroundColor: 'transparent',
-    marginTop: "1vw",
-  
-    width: '100%',
-    padding: '0.5vw 1vw',
-    borderRadius: '0.5vw',
-    borderStyle: "solid",
-    borderWidth: "1px",
-    borderColor: "#DFDFDF",
-    fontFamily: '"InstrumentSans" sans-serif',
-    fontSize: '1vw',
-    color: '#333',
-    transition: 'all 0.3s ease',
-  };
-  
+ 
 export default  function FormInput(props: InputProps) {
     const [isFocused, setIsFocused] = React.useState(false);
   
@@ -46,3 +26,26 @@ export default  function FormInput(props: InputProps) {
       />
     );
   }
+
+
+const inputStyles: React.CSSProperties = {
+    appearance: 'none',
+    WebkitAppearance: 'none',
+    MozAppearance: 'none',
+    outline: 'none',
+    backgroundImage: 'none',
+    backgroundColor: 'transparent',
+    marginTop: "1vw",
+    position: "relative",
+    width: '100%',
+    padding: '0.5vw 1vw',
+    borderRadius: '0.5vw',
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderColor: "#DFDFDF",
+    fontFamily: '"InstrumentSans" sans-serif',
+    fontSize: '1vw',
+    color: '#333',
+    transition: 'all 0.3s ease',
+  };
+ 

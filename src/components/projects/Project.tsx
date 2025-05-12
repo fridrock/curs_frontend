@@ -1,17 +1,36 @@
-import { AxiosResponse } from "axios"
-import useAxios from "../../hooks/useAxios"
+import { AxiosResponse } from "axios";
+import useAxios from "../../hooks/useAxios";
+import { ProjectDto } from "../../interfaces/projectInterfaces";
+import Button from "../default/Button";
+import { NavLink } from "react-router";
 
-export default function Project(){
-    const {api} = useAxios()
-    async function performRequest(){
-        try{
-            let response: AxiosResponse = await api.get("/protected/")
-            console.log(response.data)
-        }catch(error){
-            console.log(error)
-        }
-    }
-    return <>
-        <button onClick={async ()=> await performRequest()}>Click me</button>
-    </>
+interface ProjectProps {
+  project: ProjectDto;
+  patchCallback: () => Promise<void>;
+  deleteCallback: (id?: string) => Promise<void>;
+}
+
+export default function Project({
+  project,
+  patchCallback,
+  deleteCallback,
+}: ProjectProps) {
+  const { api } = useAxios();
+
+  return (
+    <div>
+      <NavLink to={`/projects/${project.projectId}`}>{project.name}</NavLink>
+      <Button
+        isPrimary={true}
+        name="Delete"
+        onClick={(e) => deleteCallback(project.projectId)}
+      ></Button>
+
+      <Button
+        isPrimary={true}
+        name="Patch"
+        onClick={(e) => patchCallback()}
+      ></Button>
+    </div>
+  );
 }
