@@ -1,38 +1,38 @@
 import { useState, useEffect } from "react";
 import Dashboard from "./Dashboard";
-import { ProjectDto } from "../../interfaces/projectInterfaces";
-import useAxios from "../../hooks/useAxios";
+import { DashboardDto } from "../../schemes";
+import useApi from "../../hooks/useApi";
 import { AxiosResponse } from "axios";
 import DashboardForm from "./DashboardForm";
-import TasksList from "./tasks/TasksList";
+import TasksList from "../tasks/TasksList";
 
 interface EditDashboard {
   name: string;
-  projectId?: string;
-  perform: (project: ProjectDto) => void;
+  dashboardId?: string;
+  perform: (project: DashboardDto) => void;
 }
 
 export default function DashboardList() {
-  const [dashboards, setDashboards] = useState<ProjectDto[]>([]);
+  const [dashboards, setDashboards] = useState<DashboardDto[]>([]);
   let [dashboardForm, setDashboardForm] = useState<EditDashboard | undefined>();
   let [dashboardChoosen, setDashboardChoosen] = useState<string | undefined>();
-  const { api } = useAxios();
+  const { api } = useApi();
 
   async function getDashboards() {
     try {
-      const response: AxiosResponse<ProjectDto[]> = await api.get("/projects");
+      const response: AxiosResponse<DashboardDto[]> = await api.get(
+        "/dashboards"
+      );
       setDashboards(response.data);
     } catch (error) {
       console.log(`error fetching dashboards ${error}`);
     }
   }
 
-  async function createDashboard(dashboard: ProjectDto) {
+  async function createDashboard(dashboard: DashboardDto) {
     try {
-      const response: AxiosResponse<ProjectDto> = await api.post<ProjectDto>(
-        "/projects",
-        dashboard
-      );
+      const response: AxiosResponse<DashboardDto> =
+        await api.post<DashboardDto>("/dashboards", dashboard);
       setDashboards([...dashboards, response.data]);
       closeForm();
     } catch (error) {
@@ -40,14 +40,12 @@ export default function DashboardList() {
     }
   }
 
-  async function patchDashboard(dashboard: ProjectDto): Promise<void> {
+  async function patchDashboard(dashboard: DashboardDto): Promise<void> {
     try {
-      const response: AxiosResponse<ProjectDto> = await api.patch<ProjectDto>(
-        "/projects",
-        dashboard
-      );
+      const response: AxiosResponse<DashboardDto> =
+        await api.patch<DashboardDto>("/dashboards", dashboard);
       setDashboards([
-        ...dashboards.filter((pr) => pr.projectId != dashboard.projectId),
+        ...dashboards.filter((dsh) => dsh.dashboardId != dashboard.dashboardId),
         response.data,
       ]);
       closeForm();
@@ -59,10 +57,10 @@ export default function DashboardList() {
   async function deleteDashboard(id?: string): Promise<void> {
     try {
       const response: AxiosResponse<void> = await api.delete<void>(
-        `/projects/${id}`
+        `/dashboards/${id}`
       );
       setDashboards(
-        dashboards.filter((dashboard) => dashboard.projectId != id)
+        dashboards.filter((dashboard) => dashboard.dashboardId != id)
       );
       setDashboardChoosen(undefined);
     } catch (error) {
@@ -71,10 +69,10 @@ export default function DashboardList() {
   }
 
   function openEditDashboardForm(
-    project: ProjectDto,
-    callback: (dto: ProjectDto) => void
+    dashboard: DashboardDto,
+    callback: (dto: DashboardDto) => void
   ) {
-    setDashboardForm({ ...project, perform: callback });
+    setDashboardForm({ ...dashboard, perform: callback });
   }
 
   function closeForm() {
@@ -91,7 +89,7 @@ export default function DashboardList() {
         <DashboardForm
           name={dashboardForm.name}
           perform={dashboardForm ? dashboardForm.perform : createDashboard}
-          projectId={dashboardForm.projectId}
+          dashboardId={dashboardForm.dashboardId}
           close={closeForm}
         ></DashboardForm>
       ) : (
@@ -110,16 +108,18 @@ export default function DashboardList() {
               Создать доску
             </button>
           </div>
-          {dashboards.map((project) => (
+          {dashboards.map((dashboard) => (
             <Dashboard
-              key={project.projectId}
-              choosen={dashboardChoosen == project.projectId}
+              key={dashboard.dashboardId}
+              choosen={dashboardChoosen == dashboard.dashboardId}
               choose={() => {
-                setDashboardChoosen((prevstate) => project.projectId);
+                setDashboardChoosen((prevstate) => dashboard.dashboardId);
               }}
-              dashboard={project}
+              dashboard={dashboard}
               del={deleteDashboard}
-              patch={async () => openEditDashboardForm(project, patchDashboard)}
+              patch={async () =>
+                openEditDashboardForm(dashboard, patchDashboard)
+              }
             />
           ))}
         </div>

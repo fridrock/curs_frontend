@@ -3,8 +3,8 @@ import Home from "./components/Home";
 import useUserStore from "./state/userStore";
 import Auth from "./components/users/Auth";
 import Register from "./components/users/Register";
-import ProjectList from "./components/projects/DashboardList";
-import TasksList from "./components/projects/tasks/TasksList";
+import ProjectList from "./components/dashboards/DashboardList";
+import TasksList from "./components/tasks/TasksList";
 import "./App.css";
 
 function App() {

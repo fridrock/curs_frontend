@@ -1,7 +1,7 @@
-import { ProjectDto } from "../../interfaces/projectInterfaces";
+import { DashboardDto } from "../../schemes";
 
 interface DashboardProps {
-  dashboard: ProjectDto;
+  dashboard: DashboardDto;
   patch: () => Promise<void>;
   del: (id?: string) => Promise<void>;
   choose: () => void;
@@ -38,7 +38,7 @@ export default function Dashboard({
           </button>
           <button
             className="bg-red-900 text-white px-4 py-2 rounded ml-[1vw]"
-            onClick={(e) => del(dashboard.projectId)}
+            onClick={(e) => del(dashboard.dashboardId)}
           >
             Удалить
           </button>

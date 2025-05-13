@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
-import useAxios from "../../../hooks/useAxios";
+import useApi from "../../hooks/useApi";
 import { AxiosResponse } from "axios";
-import { TaskDto } from "../../../interfaces/taskInterfaces";
+import { TaskDto } from "../../schemes";
 import Task from "./Task";
 import TaskForm from "./TaskForm";
-import {
-  prepareDate,
-  parseDate,
-  calculateTimePercentage,
-} from "../../../util/DateUtil";
+import { prepareDate, parseDate } from "../../util/DateUtil";
+import AiCreateForm from "./AICreateForm";
 
 interface ChoosenTask extends TaskDto {
   perform: (task: TaskDto) => void;
@@ -21,31 +18,46 @@ interface TaskListProps {
 export default function TasksList({ dashboardId }: TaskListProps) {
   const [tasks, setTasks] = useState<TaskDto[]>([]);
   let [taskForm, setTaskForm] = useState<ChoosenTask | undefined>();
-  const { api } = useAxios();
+  let [aiForm, setAiForm] = useState<boolean>();
+  const { api } = useApi();
 
   async function getTasks() {
     try {
       const response: AxiosResponse<TaskDto[]> = await api.get(
-        `/tasks/byProject/${dashboardId}`
+        `/tasks/byDashboard/${dashboardId}`
       );
       response.data.forEach((task) => {
         task.deadline = prepareDate(task.deadline);
         task.issued = prepareDate(task.issued);
       });
-      response.data = response.data.sort(
-        (task1, task2) =>
-          calculateTimePercentage(task2.issued, task2.deadline) -
-          calculateTimePercentage(task1.issued, task1.deadline)
-      );
       setTasks(response.data);
     } catch (error) {
       console.log(`error fetching projects ${error}`);
     }
   }
 
+  async function createWithAI(prompt: string, dashboardId?: string) {
+    try {
+      const response: AxiosResponse<TaskDto> = await api.post<TaskDto>(
+        "/tasks/ai",
+        {
+          message: prompt,
+          dashboardId: dashboardId,
+        }
+      );
+      response.data.deadline = prepareDate(response.data.deadline);
+      response.data.issued = prepareDate(response.data.issued);
+      setTasks([...tasks, response.data]);
+    } catch (error) {
+      console.log(`error creating task ${error}`);
+    }
+    setAiForm(false);
+  }
+
   async function createTask(task: TaskDto) {
     let taskDto: TaskDto = {
-      projectId: dashboardId,
+      source: task.source,
+      dashboardId: dashboardId,
       priority: task.priority,
       description: task.description,
       title: task.title,
@@ -71,7 +83,8 @@ export default function TasksList({ dashboardId }: TaskListProps) {
     console.log(task);
     let taskDto: TaskDto = {
       taskId: task.taskId,
-      projectId: dashboardId,
+      source: task.source,
+      dashboardId: dashboardId,
       priority: task.priority,
       description: task.description,
       title: task.title,
@@ -91,11 +104,6 @@ export default function TasksList({ dashboardId }: TaskListProps) {
         ...tasks.filter((tsk) => tsk.taskId != taskDto.taskId),
         response.data,
       ];
-      newTasks = newTasks.sort(
-        (task1, task2) =>
-          calculateTimePercentage(task2.issued, task2.deadline) -
-          calculateTimePercentage(task1.issued, task1.deadline)
-      );
       setTasks(newTasks);
       closeForm();
     } catch (error) {
@@ -132,8 +140,9 @@ export default function TasksList({ dashboardId }: TaskListProps) {
         <TaskForm
           title={taskForm.title}
           taskId={taskForm.taskId}
+          source="PERSON"
           perform={taskForm ? taskForm.perform : createTask}
-          projectId={taskForm.projectId}
+          dashboardId={taskForm.dashboardId}
           description={taskForm.description}
           issued={taskForm.description}
           deadline={taskForm.deadline}
@@ -144,16 +153,32 @@ export default function TasksList({ dashboardId }: TaskListProps) {
       ) : (
         <></>
       )}
+      {aiForm ? (
+        <AiCreateForm
+          perform={(message) => createWithAI(message, dashboardId)}
+          close={() => setAiForm(false)}
+        ></AiCreateForm>
+      ) : (
+        <></>
+      )}
       <div className="mt-[5vw] flex justify-start items-center flex-col pl-[15vw] w-full">
         <div className="flex justify-start items-center">
           <h1 className="text-3xl">Ваши задачи</h1>
           <button
             className="bg-red-900 text-white px-4 py-2 rounded ml-[2vw]"
             onClick={() => {
-              chooseTask({ projectId: dashboardId } as TaskDto, createTask);
+              chooseTask({ dashboardId: dashboardId } as TaskDto, createTask);
             }}
           >
             Создать задачу
+          </button>
+          <button
+            className="bg-red-900 text-white px-4 py-2 rounded ml-[2vw]"
+            onClick={() => {
+              setAiForm(true);
+            }}
+          >
+            Создать через ИИ
           </button>
         </div>
         <div className="flex justify-start items-center flex-col mt-[3vw] pb-[3vw]">

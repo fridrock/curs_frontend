@@ -1,6 +1,5 @@
 import { NavLink, useNavigate } from "react-router";
-import useUserStore from "../../state/userStore";
-import Button from "./Button";
+import useUserStore from "../state/userStore";
 
 export default function Header() {
   const userStore = useUserStore();

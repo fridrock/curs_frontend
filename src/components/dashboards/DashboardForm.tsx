@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { ProjectDto } from "../../interfaces/projectInterfaces";
+import { DashboardDto } from "../../schemes";
 
 interface DashboardForm {
   name: string;
-  projectId?: string;
+  dashboardId?: string;
 }
 
 interface DashboardFormProps extends DashboardForm {
-  perform: (data: ProjectDto) => void;
+  perform: (data: DashboardDto) => void;
   close: () => void;
 }
 
@@ -16,7 +16,7 @@ export default function DashboardForm(dashboardFormProps: DashboardFormProps) {
     useState<DashboardForm>(dashboardFormProps);
   return (
     <>
-      <form className="absolute w-[30vw] mt-[10vw] flex flex-col justify-start items-start border border-gray-300 p-[1vw] rounded">
+      <form className="absolute w-[30vw] mt-[10vw] flex flex-col justify-start items-start border border-gray-300 p-[1vw] rounded bg-[white]">
         <button
           className="bg-red-900 text-white px-4 py-2 rounded ml-[auto]"
           onClick={(e) => {
@@ -41,7 +41,9 @@ export default function DashboardForm(dashboardFormProps: DashboardFormProps) {
             e.preventDefault();
             dashboardFormProps.perform({
               name: dashboardForm.name,
-              projectId: dashboardForm.projectId ? dashboardForm.projectId : "",
+              dashboardId: dashboardForm.dashboardId
+                ? dashboardForm.dashboardId
+                : "",
             });
           }}
         >

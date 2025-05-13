@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router";
-import Button from "./default/Button";
-import Header from "./default/Header";
+import Header from "./Header";
 import logo from "../img/Illustration.svg";
 import useUserStore from "../state/userStore";
-import ProjectList from "./projects/DashboardList";
+import ProjectList from "./dashboards/DashboardList";
 
 function Home() {
   const navigate = useNavigate();

@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { AuthResponse, IAuthDto } from "../../interfaces/userInterfaces";
 import { AxiosResponse } from "axios";
 import useUserStore from "../../state/userStore";
 import { useNavigate } from "react-router";
-import useAxios from "../../hooks/useAxios";
-import Header from "../default/Header";
+import useApi from "../../hooks/useApi";
+import Header from "../Header";
+import { AuthDto, AuthResponse } from "../../schemes";
 
 function Auth() {
-  const [authState, setRegisterState] = useState<IAuthDto>({
+  const [authState, setRegisterState] = useState<AuthDto>({
     username: "",
     password: "",
   });
   const userStore = useUserStore();
   const navigate = useNavigate();
-  const { api } = useAxios();
+  const { api } = useApi();
   async function authorize() {
     try {
       let res: AxiosResponse<AuthResponse> = await api.post<AuthResponse>(

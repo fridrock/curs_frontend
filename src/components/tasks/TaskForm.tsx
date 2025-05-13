@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { TaskDto } from "../../../interfaces/taskInterfaces";
-import Button from "../../default/Button";
+import { TaskDto } from "../../schemes";
 
 interface TaskFormProps extends TaskDto {
   perform: (data: TaskDto) => void;
@@ -60,6 +59,8 @@ export default function TaskForm(taskFormProps: TaskFormProps) {
           onChange={(e) => setTask({ ...task, priority: e.target.value })}
         >
           <option value="LOW">Не важно</option>
+          <option value="HIGH">Важно</option>
+          <option value="CRITICAL">Критичный</option>
         </select>
 
         <button

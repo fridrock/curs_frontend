@@ -1,4 +1,4 @@
-import { TaskDto } from "../../../interfaces/taskInterfaces";
+import { TaskDto } from "../../schemes";
 
 interface TaskProps {
   task: TaskDto;
@@ -8,6 +8,8 @@ interface TaskProps {
 
 const statusMap = new Map();
 statusMap.set("LOW", "Не важно");
+statusMap.set("HIGH", "Важно");
+statusMap.set("CRITICAL", "Критично");
 
 export default function Task({ task, patch, del }: TaskProps) {
   return (
@@ -15,6 +17,7 @@ export default function Task({ task, patch, del }: TaskProps) {
       <div className="flex justify-start items-end">
         <h2 className="text-5xl">{task.title}</h2>
         <p className="text-3xl ml-[1vw]">{statusMap.get(task.priority)}</p>
+        <p className="text-3xl ml-[1vw]">{task.source}</p>
         <p className="text-2xl ml-[1vw]">
           Создано:
           {task.issued}
