@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import Button from "../../default/Button";
 import useAxios from "../../../hooks/useAxios";
 import { AxiosResponse } from "axios";
 import { TaskDto } from "../../../interfaces/taskInterfaces";
-import Header from "../../default/Header";
-import { useParams } from "react-router";
 import Task from "./Task";
 import TaskForm from "./TaskForm";
 import {
@@ -12,18 +9,16 @@ import {
   parseDate,
   calculateTimePercentage,
 } from "../../../util/DateUtil";
-import {
-  CENTRALIZED_COLUMN,
-  CENTRALIZED_ROW,
-} from "../../../styles/defaultStyles";
-import logo from "../../../img/illustration3.jpg";
 
 interface ChoosenTask extends TaskDto {
   perform: (task: TaskDto) => void;
 }
 
-export default function TasksList() {
-  const { projectId } = useParams<{ projectId: string }>();
+interface TaskListProps {
+  dashboardId?: string;
+}
+
+export default function TasksList({ dashboardId }: TaskListProps) {
   const [tasks, setTasks] = useState<TaskDto[]>([]);
   let [taskForm, setTaskForm] = useState<ChoosenTask | undefined>();
   const { api } = useAxios();
@@ -31,7 +26,7 @@ export default function TasksList() {
   async function getTasks() {
     try {
       const response: AxiosResponse<TaskDto[]> = await api.get(
-        `/tasks/byProject/${projectId}`
+        `/tasks/byProject/${dashboardId}`
       );
       response.data.forEach((task) => {
         task.deadline = prepareDate(task.deadline);
@@ -50,7 +45,7 @@ export default function TasksList() {
 
   async function createTask(task: TaskDto) {
     let taskDto: TaskDto = {
-      projectId: projectId,
+      projectId: dashboardId,
       priority: task.priority,
       description: task.description,
       title: task.title,
@@ -76,7 +71,7 @@ export default function TasksList() {
     console.log(task);
     let taskDto: TaskDto = {
       taskId: task.taskId,
-      projectId: projectId,
+      projectId: dashboardId,
       priority: task.priority,
       description: task.description,
       title: task.title,
@@ -129,11 +124,10 @@ export default function TasksList() {
 
   useEffect(() => {
     getTasks();
-  }, []);
+  }, [dashboardId]);
 
   return (
     <>
-      <Header></Header>
       {taskForm ? (
         <TaskForm
           title={taskForm.title}
@@ -150,41 +144,29 @@ export default function TasksList() {
       ) : (
         <></>
       )}
-      <div style={CENTRALIZED_COLUMN}>
-        <div style={{ ...CENTRALIZED_ROW, margin: "2vw" }}>
-          <h1 style={{ color: "#555555", fontSize: "2vw" }}>
-            Create and explore your tasks
-          </h1>
-          <Button
-            style={{ marginLeft: "1vw" }}
-            name="Create"
+      <div className="mt-[5vw] flex justify-start items-center flex-col pl-[15vw] w-full">
+        <div className="flex justify-start items-center">
+          <h1 className="text-3xl">Ваши задачи</h1>
+          <button
+            className="bg-red-900 text-white px-4 py-2 rounded ml-[2vw]"
             onClick={() => {
-              chooseTask({ projectId } as TaskDto, createTask);
+              chooseTask({ projectId: dashboardId } as TaskDto, createTask);
             }}
-            isPrimary={true}
-          />
+          >
+            Создать задачу
+          </button>
         </div>
-        <div style={CENTRALIZED_ROW}>
-          <img src={logo} style={{ width: "40vw" }}></img>
-          <div style={{ ...CENTRALIZED_COLUMN, ...tasksListStyle }}>
-            {tasks.map((task) => (
-              <Task
-                key={task.taskId}
-                task={task}
-                patchCallback={async () => chooseTask(task, patchTask)}
-                deleteCallback={deleteTask}
-              />
-            ))}
-          </div>
+        <div className="flex justify-start items-center flex-col mt-[3vw] pb-[3vw]">
+          {tasks.map((task) => (
+            <Task
+              key={task.taskId}
+              task={task}
+              patch={async () => chooseTask(task, patchTask)}
+              del={deleteTask}
+            />
+          ))}
         </div>
       </div>
     </>
   );
 }
-const tasksListStyle: React.CSSProperties = {
-  flex: "1",
-  height: "80vh",
-  width: "50vw",
-  overflowY: "scroll",
-  marginLeft: "3vw",
-};

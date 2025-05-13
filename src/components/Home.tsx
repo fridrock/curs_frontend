@@ -1,86 +1,45 @@
 import { useNavigate } from "react-router";
-import useAxios from "../hooks/useAxios";
 import Button from "./default/Button";
 import Header from "./default/Header";
 import logo from "../img/Illustration.svg";
-import { CENTRALIZED_COLUMN } from "../styles/defaultStyles";
 import useUserStore from "../state/userStore";
+import ProjectList from "./projects/DashboardList";
+
 function Home() {
-  const { api } = useAxios();
   const navigate = useNavigate();
   const userStore = useUserStore();
-  async function getQuery() {
-    try {
-      await api.get("/users/get");
-    } catch (error) {
-      console.log(error);
-      //TODO error handling
-    }
-  }
+
   return (
-    <div style={CENTRALIZED_COLUMN}>
+    <div className="flex justify-start items-center flex-col">
       <Header></Header>
-      <h1
-        style={{
-          width: "60vw",
-          fontSize: "2.8vw",
-          textAlign: "center",
-          color: "#555555",
-          marginTop: "1vw",
-        }}
-      >
-        Welcome to AntiProcrostinate! Sign up if you don't have account, sign in
-        if you already have
-      </h1>
-      <div style={contentPartStyle}>
-        <img
-          style={{
-            width: "40vw",
-          }}
-          src={logo}
-          alt=""
-        />
-        <div
-          style={{
-            ...CENTRALIZED_COLUMN,
-            marginLeft: "2vw",
-          }}
-        >
-          {!userStore.token ? (
-            <>
-              <Button
-                style={{
-                  marginBottom: "2vw",
-                }}
-                isPrimary={true}
-                name="Sign up"
-                onClick={() => navigate("/register")}
-              />
-              <Button
-                isPrimary={false}
-                name="Sign in"
-                onClick={() => navigate("/auth")}
-              />
-            </>
-          ) : (
-            <>
-              <Button
-                name="Go to your projects!"
-                isPrimary={true}
-                onClick={(e) => navigate("/projects")}
-              />
-            </>
-          )}
-        </div>
+      <div className="w-full h-full flex flex-col justify-start items-center">
+        {!userStore.token ? (
+          <>
+            <h1 className="text-5xl mt-[10vw]">
+              Добро пожаловать, войдите в аккаунт
+            </h1>
+
+            <button
+              className="bg-red-900 text-white px-4 py-2 rounded mt-[1vw]"
+              onClick={() => navigate("/signin")}
+            >
+              Логин
+            </button>
+            <button
+              className="bg-red-900 text-white px-4 py-2 rounded mt-[1vw]"
+              onClick={() => navigate("/signup")}
+            >
+              Регистрация
+            </button>
+          </>
+        ) : (
+          <>
+            <ProjectList></ProjectList>
+          </>
+        )}
       </div>
     </div>
   );
 }
-
-const contentPartStyle: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-};
 
 export default Home;

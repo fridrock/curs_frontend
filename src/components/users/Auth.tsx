@@ -5,52 +5,6 @@ import useUserStore from "../../state/userStore";
 import { useNavigate } from "react-router";
 import useAxios from "../../hooks/useAxios";
 import Header from "../default/Header";
-import Label from "../default/Label";
-import FormInput from "../default/FormInput";
-
-import logo from "../../img/Illustration.svg";
-import Button from "../default/Button";
-
-const containerStyles: React.CSSProperties = {
-  display: "flex",
-  height: "100vh",
-  justifyContent: "start",
-  alignItems: "center",
-  flexDirection: "column",
-  width: "100vw",
-};
-
-const innerContainerStyles: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  borderWidth: "3px",
-  padding: "2.5vw 5vw",
-  borderStyle: "solid",
-  borderColor: "#DFDFDF", // slate-200
-  borderRadius: "0.375rem",
-  marginTop: "5vw",
-};
-
-const formStyles: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "start",
-  alignContent: "center",
-  flexDirection: "column",
-  width: "25vw",
-  padding: "2.5vw",
-};
-
-const h3Styles: React.CSSProperties = {
-  fontFamily: '"InstrumentSans", sans-serif',
-  fontSize: "2vw",
-  color: "#555555",
-};
-
-const logoStyles: React.CSSProperties = {
-  marginLeft: "5vw",
-  display: "block",
-};
 
 function Auth() {
   const [authState, setRegisterState] = useState<IAuthDto>({
@@ -61,7 +15,6 @@ function Auth() {
   const navigate = useNavigate();
   const { api } = useAxios();
   async function authorize() {
-    //TODO validation
     try {
       let res: AxiosResponse<AuthResponse> = await api.post<AuthResponse>(
         "/users/auth",
@@ -71,44 +24,40 @@ function Auth() {
         userStore.setToken(res.data.token);
         navigate("/home");
       }
-    } catch (error) {
-      //TODO error handling
-    }
+    } catch (error) {}
   }
   return (
-    <div style={containerStyles}>
+    <div className="w-full flex flex-col justify-start items-center">
       <Header></Header>
-      <div style={innerContainerStyles}>
-        <form style={formStyles}>
-          <h3 style={h3Styles}>Authorize</h3>
-          <Label name="Username"></Label>
-          <FormInput
-            value={authState.username}
-            placeHolder="Enter your username"
-            onChange={(e) =>
-              setRegisterState({ ...authState, username: e.target.value })
-            }
-          ></FormInput>
-          <Label name="Password"></Label>
-          <FormInput
-            value={authState.password}
-            placeHolder="Enter your password"
-            onChange={(e) =>
-              setRegisterState({ ...authState, password: e.target.value })
-            }
-          ></FormInput>
-          <Button
-            name="Authorize"
-            style={{ marginTop: "1vw" }}
-            onClick={(e) => {
-              e.preventDefault();
-              authorize();
-            }}
-            isPrimary={true}
-          ></Button>
-        </form>
-        <img style={logoStyles} src={logo}></img>
-      </div>
+      <form className="w-[30vw] mt-[10vw] flex flex-col justify-start items-start border border-gray-300 p-[1vw] rounded">
+        <label className="text-3xl mb-[1vw] mt-[1vw]">Логин</label>
+        <input
+          className="text-2xl w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent transition-all duration-200"
+          value={authState.username}
+          placeholder="Введите логин"
+          onChange={(e) =>
+            setRegisterState({ ...authState, username: e.target.value })
+          }
+        ></input>
+        <label className="text-3xl mb-[1vw] mt-[1vw]">Пароль</label>
+        <input
+          className="text-2xl w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent transition-all duration-200"
+          value={authState.password}
+          placeholder="Введите пароль"
+          onChange={(e) =>
+            setRegisterState({ ...authState, password: e.target.value })
+          }
+        ></input>
+        <button
+          className="bg-red-900 text-white px-4 py-2 rounded mt-[1vw]"
+          onClick={(e) => {
+            e.preventDefault();
+            authorize();
+          }}
+        >
+          Войти
+        </button>
+      </form>
     </div>
   );
 }

@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 *{
     box-sizing: border-box;
-    font-family: "InstrumentSans", sans-serif;
     margin: 0;
     padding: 0;
-    overflow: hidden;
 }

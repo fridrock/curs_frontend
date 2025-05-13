@@ -3,7 +3,7 @@ import Home from "./components/Home";
 import useUserStore from "./state/userStore";
 import Auth from "./components/users/Auth";
 import Register from "./components/users/Register";
-import ProjectList from "./components/projects/ProjectsList";
+import ProjectList from "./components/projects/DashboardList";
 import TasksList from "./components/projects/tasks/TasksList";
 import "./App.css";
 
@@ -17,8 +17,8 @@ function App() {
           element={<Navigate to="/home" replace={true}></Navigate>}
         />
         <Route path="/home" element={<Home />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/signin" element={<Auth />} />
+        <Route path="/signup" element={<Register />} />
         <Route path="/projects" element={<ProjectList />} />
         <Route path="/projects/:projectId" element={<TasksList />} />
       </Routes>
